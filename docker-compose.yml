@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: laravel_app
+    volumes:
+      - .:/var/www
+    depends_on:
+      - db
+
+  webserver:
+    image: nginx:latest
+    container_name: nginx_server
+    ports:
+      - "8000:80"
+    volumes:
+      - .:/var/www
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+
+  db:
+    image: mysql:8
+    container_name: mysql_db
+    environment:
+      MYSQL_DATABASE: taskflow
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
